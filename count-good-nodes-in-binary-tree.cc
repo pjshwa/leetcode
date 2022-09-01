@@ -9,17 +9,22 @@
  *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
  * };
  */
+
+const int INF = 0x3f3f3f3f;
+
 class Solution {
-public:
-  int goodNodes(TreeNode* root) {
-    return goodNodesUtil(root, -1e9);
+  int ans;
+  void dfs(TreeNode* v, int val) {
+    if (v->val >= val) ans++;
+    val = max(val, v->val);
+    if (v->left) dfs(v->left, val);
+    if (v->right) dfs(v->right, val);
   }
 
-private:
-  int goodNodesUtil(TreeNode* root, int mx) {
-    int good = root->val >= mx, l = 0, r = 0;
-    if (root->left != nullptr) l = goodNodesUtil(root->left, max(mx, root->val));
-    if (root->right != nullptr) r = goodNodesUtil(root->right, max(mx, root->val));
-    return good + l + r;
+public:
+  int goodNodes(TreeNode* root) {
+    ans = 0;
+    dfs(root, -INF);
+    return ans;
   }
 };
