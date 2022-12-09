@@ -1,21 +1,30 @@
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
 class Solution {
-public:
-  int maxAncestorDiff(TreeNode* root) {
-    result = 0;
-    maxAncestorDiffUtil(root, 1e9, -1e9);
-    return result;
+  int ans = 0;
+  void dfs(TreeNode* node, int mmin, int mmax) {
+    ans = max(ans, mmax - mmin);
+    if (node->left) {
+      dfs(node->left, min(mmin, node->left->val), max(mmax, node->left->val));
+    }
+    if (node->right) {
+      dfs(node->right, min(mmin, node->right->val), max(mmax, node->right->val));
+    }
   }
 
-private:
-  int result;
-  void maxAncestorDiffUtil(TreeNode* node, int mn, int mx) {
-    if (node == nullptr) return;
-    int new_mn = min(mn, node->val);
-    int new_mx = max(mx, node->val);
-    result = max(result, new_mx - new_mn);
-
-    maxAncestorDiffUtil(node->left, new_mn, new_mx);
-    maxAncestorDiffUtil(node->right, new_mn, new_mx);
-
+public:
+  int maxAncestorDiff(TreeNode* root) {
+    int val = root->val;
+    dfs(root, val, val);
+    return ans;
   }
 };
