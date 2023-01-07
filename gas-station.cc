@@ -1,17 +1,19 @@
 class Solution {
 public:
   int canCompleteCircuit(vector<int>& gas, vector<int>& cost) {
-    int psum = 0, minpf = 0, n = gas.size();
-    for (int i = 0; i < n; i++) {
-      psum += gas[i] - cost[i];
-      minpf = min(minpf, psum);
-    }
-    if (psum < 0) return -1;
+    int n = gas.size();
 
-    for (int i = 0; i < n; i++) {
-      if (minpf == 0) return i;
-      minpf -= gas[i] - cost[i];
+    vector<int> P(n);
+    for (int i = 0; i < n; ++i) {
+      P[i] = gas[i] - cost[i];
+      if (i > 0) P[i] += P[i - 1];
     }
-    return -1;
+    if (P[n - 1] < 0) return -1;
+
+    int mval = P[0], mpos = 0;
+    for (int i = 1; i < n; ++i) {
+      if (P[i] < mval) mval = P[i], mpos = i;
+    }
+    return (mpos + 1) % n;
   }
 };
