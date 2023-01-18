@@ -1,25 +1,22 @@
+const int INF = 0x3f3f3f3f;
 
 class Solution {
 public:
   int maxSubarraySumCircular(vector<int>& nums) {
-    int n = nums.size(), sum = 0;
-    for (int i = 0; i < n; i++) sum += nums[i];
+    int n = nums.size();
 
-    int max_so_far = -1e9, max_ending_here = 0;
+    int max_sum = -INF, min_sum = INF, max_run = 0, min_run = 0, total = 0;
     for (int i = 0; i < n; i++) {
-      max_ending_here = max_ending_here + nums[i];
-      if (max_so_far < max_ending_here) max_so_far = max_ending_here;
-      if (max_ending_here < 0) max_ending_here = 0;
-    }
-    int a = max_so_far;
-    if (a < 0) return a;
+      max_run = max(max_run + nums[i], nums[i]);
+      max_sum = max(max_sum, max_run);
 
-    max_so_far = -1e9, max_ending_here = 0;
-    for (int i = 0; i < n; i++) {
-      max_ending_here = max_ending_here - nums[i];
-      if (max_so_far < max_ending_here) max_so_far = max_ending_here;
-      if (max_ending_here < 0) max_ending_here = 0;
+      min_run = min(min_run + nums[i], nums[i]);
+      min_sum = min(min_sum, min_run);
+
+      total += nums[i];
     }
-    return max(sum + max_so_far, a);
+
+    if (max_sum < 0) return max_sum;
+    return max(max_sum, total - min_sum);
   }
 };
