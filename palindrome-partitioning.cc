@@ -1,41 +1,42 @@
 class Solution {
-  bool is_palindrome(string& s, int si, int ei) {
-    int n = ei - si;
-    for (int i = 0; i < n / 2; i++) {
-      if (s[si + i] != s[ei - i - 1]) return false;
-    }
-    return true;
-  }
 public:
   vector<vector<string>> partition(string s) {
-    int n = s.size();
+    function<bool(int, int)> is_palindrome = [&](int i, int j) {
+      while (i < j) {
+        if (s[i++] != s[j--]) return false;
+      }
+      return true;
+    };
 
     vector<vector<string>> ans;
-    for (int state = 0; state < (1 << (n - 1)); state++) {
-      bool all_palindrome = true;
-      int li = 0;
-      for (int j = 0; j < n - 1; j++) {
-        if (state & (1 << j)) {
-          all_palindrome &= is_palindrome(s, li, j + 1);
-          li = j + 1;
-        }
-      }
-      all_palindrome &= is_palindrome(s, li, n);
+    int n = s.size(), b = n - 1;
 
-      if (!all_palindrome) continue;
+    for (int state = 0; state < (1 << b); state++) {
+      int last = 0, f = 1;
 
-      vector<string> partitions;
-      li = 0;
-      for (int j = 0; j < n - 1; j++) {
-        if (state & (1 << j)) {
-          partitions.push_back(s.substr(li, j - li + 1));
-          li = j + 1;
+      for (int i = 0; i < b; i++) {
+        if (!(state & (1 << i))) continue;
+
+        int l = last, r = i;
+        if (!is_palindrome(l, r)) {
+          f = 0;
+          break;
         }
+        last = i + 1;
       }
-      partitions.push_back(s.substr(li));
-      ans.push_back(partitions);
+      f = f && is_palindrome(last, n - 1);
+      if (!f) continue;
+
+      vector<string> cur; last = 0;
+      for (int i = 0; i < b; i++) {
+        if (!(state & (1 << i))) continue;
+
+        cur.push_back(s.substr(last, i - last + 1));
+        last = i + 1;
+      }
+      cur.push_back(s.substr(last, n - last));
+      ans.push_back(cur);
     }
-
     return ans;
   }
 };
