@@ -1,9 +1,7 @@
 class Solution {
-  int indegree[1001], outdegree[1001];
 public:
   int findJudge(int n, vector<vector<int>>& trust) {
-    memset(indegree, 0, sizeof(indegree));
-    memset(outdegree, 0, sizeof(outdegree));
+    int indegree[1001]{}, outdegree[1001]{};
 
     for (auto& v : trust) {
       outdegree[v[0]]++;
