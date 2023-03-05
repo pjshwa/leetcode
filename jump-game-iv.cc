@@ -1,56 +1,48 @@
-using ll = long long;
-using pll = pair<ll, ll>;
-const int MAX = 1e5;
-const ll INF = 1e18;
+using pii = pair<int, int>;
 
 class Solution {
-
-  ll cdist[MAX + 1];
-  vector<pll> graph[MAX + 1];
-
-  void dijk(int s) {
-    fill(cdist, cdist + MAX + 1, INF);
-    cdist[s] = 0;
-
-    priority_queue<pll, vector<pll>, greater<pll>> pq;
-    pq.push({0, s});
-
-    while (!pq.empty()) {
-      auto [wi, ui] = pq.top();
-      pq.pop();
-
-      if (wi > cdist[ui]) continue;
-
-      for (auto &p : graph[ui]) {
-        auto [vi, di] = p;
-        if (cdist[vi] > di + wi) {
-          cdist[vi] = di + wi;
-          pq.push({cdist[vi], vi});
-        }
-      }
-    }
-  }
-
 public:
   int minJumps(vector<int>& arr) {
-    map<int, vector<int>> u;
+    map<int, vector<int>> by_val;
     int n = arr.size();
     for (int i = 0; i < n; i++) {
-      u[arr[i]].push_back(i);
-      if (i < n - 1) graph[i].push_back({i + 1, 1});
-      if (i > 0) graph[i].push_back({i - 1, 1});
+      by_val[arr[i]].push_back(i);
     }
 
-    int it = 50000;
-    for (auto& [a, v] : u) {
-      for (int e : v) {
-        graph[it].push_back({e, 1});
-        graph[e].push_back({it, 0});
+    vector<vector<pii>> adj(2 * n);
+    for (int i = 0; i < n - 1; i++) {
+      adj[i].push_back({i + 1, 1});
+      adj[i + 1].push_back({i, 1});
+    }
+
+    // Create virtual node to connect all nodes with same value.
+    int it = n;
+    for (auto& [_, vv] : by_val) {
+      for (int v : vv) {
+        adj[it].push_back({v, 0});
+        adj[v].push_back({it, 1});
       }
       it++;
     }
 
-    dijk(0);
+    int cdist[2 * n];
+    memset(cdist, 0x3f, sizeof(cdist));
+
+    deque<pii> q;
+    q.push_back({0, 0}); cdist[0] = 0;
+
+    while (!q.empty()) {
+      auto [u, d] = q.front(); q.pop_front();
+
+      if (cdist[u] < d) continue;
+      for (auto [v, w] : adj[u]) {
+        if (cdist[v] > d + w) {
+          if (w == 0) q.push_front({v, d}), cdist[v] = d;
+          else q.push_back({v, d + w}), cdist[v] = d + w;
+        }
+      }
+    }
+
     return cdist[n - 1];
   }
 };
