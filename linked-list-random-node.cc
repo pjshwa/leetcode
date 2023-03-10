@@ -15,9 +15,12 @@ public:
     this->head = head;
   }
   
+  // Reservoir Sampling
+  // Probability that ith node remains is (1/i)*(i/(i+1))*...*((n-1)/n)=1/n
   int getRandom() {
     int res = head->val;
     ListNode *cur = head->next;
+
     int i = 2;
     while (cur) {
       int j = rand() % i;
@@ -34,4 +37,3 @@ public:
  * Solution* obj = new Solution(head);
  * int param_1 = obj->getRandom();
  */
- 
