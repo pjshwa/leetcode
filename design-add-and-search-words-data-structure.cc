@@ -1,90 +1,51 @@
-#include <bits/stdc++.h>
-using namespace std;
-
-class TrieNode {
-public:
-  bool valid;
-  int child[26];
-
-  TrieNode() {
-    valid = false;
-    for (int i = 0; i < 26; i++) child[i] = -1;
-  }
+struct TrieNode {
+  TrieNode* C[26]{};
+  bool valid = false;
 };
 
-class Trie {
-  string tmp;
-private:
-
-  int _newNode() {
-    TrieNode tmp;
-    trie.push_back(tmp);
-    return trie.size() - 1;
-  }
-
-  void _add(string &str, int node, int idx) {
-    if (idx == str.size()) {
-      trie[node].valid = true; return;
-    }
-    int c = str[idx] - 'a';
-    if (trie[node].child[c] == -1) {
-      int next = _newNode();
-      trie[node].child[c] = next;
-    }
-    _add(str, trie[node].child[c], idx + 1);
-  }
-
-  bool _exist_rec(int si, int ti) {
-    if (si == tmp.size()) return trie[ti].valid;
-
-    if (tmp[si] == '.') {
-      for (int i = 0; i < 26; i++) {
-        if (trie[ti].child[i] == -1) continue;
-        if (_exist_rec(si + 1, trie[ti].child[i])) return true;
-      }
-    }
-    else {
-      int c = tmp[si] - 'a';
-      if (trie[ti].child[c] == -1) return false;
-      return _exist_rec(si + 1, trie[ti].child[c]);
-    }
-    return false;
-  }
-
-  bool _exist(string &str) {
-    tmp = str;
-    return _exist_rec(0, 0);
-  }
-public:
-  vector<TrieNode> trie;
+struct Trie {
+  TrieNode* root;
   Trie() {
-    _newNode();
+    root = new TrieNode();
   }
-  void add(string &str) {
-    _add(str, 0, 0);
-  }
-  void add(char str[]) {
-    string tmp(str);
-    _add(tmp, 0, 0);
-  }
-  bool exist(string &str) {
-    return _exist(str);
-  }
-  bool exist(char str[]) {
-    string tmp(str);
-    return _exist(tmp);
+
+  void insert(string word) {
+    TrieNode* p = root;
+    for (char c : word) {
+      if (!p->C[c - 'a']) {
+        p->C[c - 'a'] = new TrieNode();
+      }
+      p = p->C[c - 'a'];
+    }
+    p->valid = true;
   }
 };
 
 class WordDictionary {
-  Trie a;
-public:
-  void addWord(string word) {
-    a.add(word);
+  Trie trie;
+
+  bool search_util(string& word, int i, TrieNode* p) {
+    if (i == word.size()) return p->valid;
+
+    char c = word[i];
+    bool ret = false;
+    for (int l = 0; l < 26; l++) {
+      if (c != '.' && l != c - 'a') continue;
+      if (!p->C[l]) continue;
+      ret |= search_util(word, i + 1, p->C[l]);
+    }
+    return ret;
   }
 
+public:
+  WordDictionary() {}
+  
+  void addWord(string word) {
+    trie.insert(word);
+  }
+  
   bool search(string word) {
-    return a.exist(word);
+    return search_util(word, 0, trie.root);
   }
 };
 
@@ -94,20 +55,3 @@ public:
  * obj->addWord(word);
  * bool param_2 = obj->search(word);
  */
-
-int main() {
-  auto w = WordDictionary();
-  for (int i = 0; i < 100; i++) {
-    string s = "";
-    for (int j = 0; j < 100; j++) {
-      s += 'a' + rand() % 26;
-    }
-    w.addWord(s);
-  }
-  string q = "";
-  for (int i = 0; i < 99; i++) q += '.';
-  for (int i = 0; i < 100; i++) {
-    cout << i << endl;
-    w.search(q);
-  }
-}
