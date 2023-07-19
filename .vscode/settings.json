@@ -16,6 +16,9 @@
     "initializer_list": "cpp",
     "ranges": "cpp",
     "regex": "cpp",
-    "valarray": "cpp"
+    "valarray": "cpp",
+    "any": "cpp",
+    "bitset": "cpp",
+    "utility": "cpp"
   }
 }
