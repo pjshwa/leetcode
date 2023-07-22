@@ -1,32 +1,31 @@
 class Solution {
 public:
   int trap(vector<int>& height) {
-    int max_height = *max_element(height.begin(), height.end());
-    int n = height.size();
+    int N = height.size();
 
-    vector<int> max_indices;
-    for (int i = 0; i < n; i++) {
-      if (height[i] == max_height) max_indices.push_back(i);
+    int L[N], R[N];
+    {
+      deque<int> S;
+      for (int i = 0; i < N; i++) {
+        while (!S.empty() && S.back() <= height[i]) S.pop_back();
+        L[i] = S.empty() ? 0 : S.front();
+        S.push_back(height[i]);
+      }
+    }
+    {
+      deque<int> S;
+      for (int i = N - 1; i >= 0; i--) {
+        while (!S.empty() && S.back() <= height[i]) S.pop_back();
+        R[i] = S.empty() ? 0 : S.front();
+        S.push_back(height[i]);
+      }
     }
 
-    int cur_max, ans = 0;
-
-    cur_max = 0;
-    for (int i = 0; i < max_indices[0]; i++) {
-      if (height[i] > cur_max) cur_max = height[i];
-      ans += cur_max - height[i];
+    int ans = 0;
+    for (int i = 0; i < N; i++) {
+      int h = min(L[i], R[i]);
+      ans += max(0, h - height[i]);
     }
-
-    cur_max = 0;
-    for (int i = n - 1; i > max_indices.back(); i--) {
-      if (height[i] > cur_max) cur_max = height[i];
-      ans += cur_max - height[i];
-    }
-
-    for (int i = max_indices[0]; i < max_indices.back(); i++) {
-      ans += max_height - height[i];
-    }
-
     return ans;
   }
 };
