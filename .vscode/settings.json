@@ -25,6 +25,8 @@
     "random": "cpp",
     "latch": "cpp",
     "limits": "cpp",
-    "semaphore": "cpp"
+    "semaphore": "cpp",
+    "algorithm": "cpp",
+    "functional": "cpp"
   }
 }
