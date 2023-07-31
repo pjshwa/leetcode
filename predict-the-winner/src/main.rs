@@ -27,15 +27,9 @@ impl Solution {
 }
 
 struct Solution;
-
-#[cfg(test)]
-mod tests {
-  use super::*;
-
-  #[test]
-  fn test() {
-    assert_eq!(Solution::predict_the_winner(vec![1, 5, 2]), false);
-    assert_eq!(Solution::predict_the_winner(vec![1, 5, 233, 7]), true);
-    assert_eq!(Solution::predict_the_winner(vec![0]), true);
-  }
+fn main() {
+  assert_eq!(Solution::predict_the_winner(vec![1, 5, 2]), false);
+  assert_eq!(Solution::predict_the_winner(vec![1, 5, 233, 7]), true);
+  assert_eq!(Solution::predict_the_winner(vec![0]), true);
+  println!("OK");
 }

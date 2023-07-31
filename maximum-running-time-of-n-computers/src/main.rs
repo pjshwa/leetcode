@@ -25,14 +25,8 @@ impl Solution {
 }
 
 struct Solution;
-
-#[cfg(test)]
-mod tests {
-  use super::*;
-
-  #[test]
-  fn test_1() {
-    assert_eq!(Solution::max_run_time(2, vec![3, 3, 3]), 4);
-    assert_eq!(Solution::max_run_time(2, vec![1, 1, 1, 1]), 2);
-  }
+fn main() {
+  assert_eq!(Solution::max_run_time(2, vec![3, 3, 3]), 4);
+  assert_eq!(Solution::max_run_time(2, vec![1, 1, 1, 1]), 2);
+  println!("OK");
 }

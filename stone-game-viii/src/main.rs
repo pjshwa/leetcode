@@ -34,15 +34,9 @@ impl Solution {
 }
 
 struct Solution;
-
-#[cfg(test)]
-mod tests {
-  use super::*;
-
-  #[test]
-  fn test() {
-    assert_eq!(Solution::stone_game_viii(vec![-1, 2, -3, 4, -5]), 5);
-    assert_eq!(Solution::stone_game_viii(vec![7,-6,5,10,5,-2,-6]), 13);
-    assert_eq!(Solution::stone_game_viii(vec![-10,-12]), -22);
-  }
+fn main() {
+  assert_eq!(Solution::stone_game_viii(vec![-1, 2, -3, 4, -5]), 5);
+  assert_eq!(Solution::stone_game_viii(vec![7,-6,5,10,5,-2,-6]), 13);
+  assert_eq!(Solution::stone_game_viii(vec![-10,-12]), -22);
+  println!("OK");
 }

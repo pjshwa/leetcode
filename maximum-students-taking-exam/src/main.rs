@@ -36,14 +36,8 @@ impl Solution {
 }
 
 struct Solution;
-
-#[cfg(test)]
-mod tests {
-  use super::*;
-
-  #[test]
-  fn max_students() {
-    assert_eq!(Solution::max_students(vec![vec!['#', '.', '#', '#', '.', '#'], vec!['.', '#', '#', '#', '#', '.'], vec!['#', '.', '#', '#', '.', '#']]), 4);
-    assert_eq!(Solution::max_students(vec![vec!['.', '#'], vec!['#', '#'], vec!['#', '.'], vec!['#', '#'], vec!['.', '#']]), 3);
-  }
+fn main() {
+  assert_eq!(Solution::max_students(vec![vec!['#', '.', '#', '#', '.', '#'], vec!['.', '#', '#', '#', '#', '.'], vec!['#', '.', '#', '#', '.', '#']]), 4);
+  assert_eq!(Solution::max_students(vec![vec!['.', '#'], vec!['#', '#'], vec!['#', '.'], vec!['#', '#'], vec!['.', '#']]), 3);
+  println!("OK");
 }
