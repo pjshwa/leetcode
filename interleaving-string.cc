@@ -1,25 +1,24 @@
 class Solution {
-  int d[201][201];
-  string S, T, U;
+  int dp[101][101];
+  string s1, s2, s3; int N, M, L;
 
-  bool r(int uz, int sz) {
-    if (d[uz][sz] != -1) return d[uz][sz];
-    if (uz == U.size()) return d[uz][sz] = (sz == S.size());
+  int r(int i, int j) {
+    if (dp[i][j] != -1) return dp[i][j];
 
-    int tz = uz - sz;
-    bool res = false;
-    if (sz < S.size() && U[uz] == S[sz]) res |= r(uz + 1, sz + 1);
-    if (tz < T.size() && U[uz] == T[tz]) res |= r(uz + 1, sz);
+    int k = i + j;
+    if (i == N && j == M) return k == L;
 
-    return d[uz][sz] = res;
+    int ret = 0;
+    if (i < N && k < L && s3[k] == s1[i]) ret |= r(i + 1, j);
+    if (j < M && k < L && s3[k] == s2[j]) ret |= r(i, j + 1);
+    return dp[i][j] = ret;
   }
 
 public:
   bool isInterleave(string s1, string s2, string s3) {
-    memset(d, -1, sizeof(d));
-    S = s1, T = s2, U = s3;
-
-    if (S.size() + T.size() != U.size()) return false;
+    this->s1 = s1, this->s2 = s2, this->s3 = s3;
+    N = s1.size(), M = s2.size(), L = s3.size();
+    memset(dp, -1, sizeof(dp));
     return r(0, 0);
   }
 };
