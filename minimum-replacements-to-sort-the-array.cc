@@ -1,17 +1,27 @@
 class Solution {
 public:
   long long minimumReplacement(vector<int>& nums) {
-    int n = nums.size(), lv = nums[n - 1];
-    long long ans = 0;
+    reverse(nums.begin(), nums.end());
+    int last = nums[0], N = nums.size();
 
-    for (int i = n - 1; i >= 0; i--) {
-      if (nums[i] <= lv) {
-        lv = nums[i];
-        continue;
+    long long ans = 0;
+    for (int i = 1; i < N; i++) {
+      if (nums[i] <= last) {
+        last = nums[i];
       }
-      int cnt = (nums[i] - 1) / lv + 1;
-      ans += cnt - 1;
-      lv = nums[i] / cnt;
+      else {
+        long long cnt = (nums[i] + last - 1) / last;
+        ans += cnt - 1;
+
+        int l = 1, r = nums[i] + 1;
+        while (l < r) {
+          int m = (l + r) / 2;
+          if (m * cnt > nums[i]) r = m;
+          else l = m + 1;
+        }
+
+        last = l - 1;
+      }
     }
 
     return ans;
