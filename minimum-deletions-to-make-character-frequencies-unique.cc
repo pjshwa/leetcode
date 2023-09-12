@@ -1,24 +1,21 @@
-const int MAX = 1e5;
-int v[MAX + 1];
-
 class Solution {
 public:
   int minDeletions(string s) {
-    map<int, int> t;
-    for (char& c : s) t[c]++;
+    map<char, int> freq;
+    for (auto c : s) freq[c]++;
 
-    memset(v, 0, sizeof(v));
-    for (auto& p : t) v[p.second]++;
+    int freq_max = 0;
+    for (auto [_, f] : freq) freq_max = max(freq_max, f);
 
     int ans = 0;
-    for (int i = MAX; i >= 1; i--) {
-      if (v[i] > 1) {
-        int off = v[i] - 1;
-        ans += off;
-        v[i - 1] += off;
+    for (int fc = freq_max; fc >= 1; fc--) {
+      bool first = true;
+      for (auto& [_, f] : freq) {
+        if (f != fc) continue;
+        if (first) first = false;
+        else f--, ans++;
       }
     }
-
     return ans;
   }
 };
