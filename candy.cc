@@ -1,23 +1,29 @@
-using pii = pair<int, int>;
-
 class Solution {
-  int d[20'001];
 public:
   int candy(vector<int>& ratings) {
-    int n = ratings.size();
-    priority_queue<pii, vector<pii>, greater<pii>> pq;
-    for (int i = 0; i < n; i++) pq.push({ratings[i], i});
+    int N = ratings.size();
 
-    memset(d, 0, sizeof(d));
-    while (!pq.empty()) {
-      auto [h, i] = pq.top();
-      pq.pop();
-
-      d[i] = 1;
-      if (i > 0 && ratings[i - 1] < h) d[i] = max(d[i], d[i - 1] + 1);
-      if (i < n - 1 && ratings[i + 1] < h) d[i] = max(d[i], d[i + 1] + 1);
+    queue<int> q;
+    vector<int> cdist(N, 0);
+    for (int i = 0; i < N; ++i) {
+      bool pit = (i == 0 || ratings[i - 1] >= ratings[i]);
+      pit &= (i == N - 1 || ratings[i + 1] >= ratings[i]);
+      if (pit) cdist[i] = 1, q.push(i);
     }
 
-    return accumulate(d, d + n, 0);
+    while (!q.empty()) {
+      int v = q.front(); q.pop();
+
+      for (int u : {v - 1, v + 1}) {
+        if (u < 0 || u >= N) continue;
+        if (ratings[u] <= ratings[v]) continue;
+
+        cdist[u] = cdist[v] + 1;
+        q.push(u);
+      }
+    }
+
+    return accumulate(cdist.begin(), cdist.end(), 0);
+      
   }
 };
