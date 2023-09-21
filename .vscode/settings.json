@@ -27,7 +27,9 @@
     "limits": "cpp",
     "semaphore": "cpp",
     "algorithm": "cpp",
-    "functional": "cpp"
+    "functional": "cpp",
+    "optional": "cpp",
+    "variant": "cpp"
   },
   "rust-analyzer.linkedProjects": [
     "./search-in-rotated-sorted-array-ii/Cargo.toml"
