@@ -29,7 +29,8 @@
     "algorithm": "cpp",
     "functional": "cpp",
     "optional": "cpp",
-    "variant": "cpp"
+    "variant": "cpp",
+    "complex": "cpp"
   },
   "rust-analyzer.linkedProjects": [
     "./search-in-rotated-sorted-array-ii/Cargo.toml"
