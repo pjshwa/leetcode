@@ -1,5 +1,7 @@
+const int MAX = 1e6;
+int m[MAX + 1];
+
 class MyHashMap {
-  int m[1'000'001];
 public:
   MyHashMap() {
     memset(m, -1, sizeof(m));
