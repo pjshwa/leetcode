@@ -1,36 +1,28 @@
 class Solution {
-  void compress(vector<int>& a) {
-    sort(a.begin(), a.end());
-    a.erase(unique(a.begin(), a.end()), a.end());
-  }
-
 public:
   vector<int> fullBloomFlowers(vector<vector<int>>& flowers, vector<int>& people) {
-    vector<int> xs; map<int, int> dt;
-    for (auto& flower : flowers) {
-      int s = flower[0], e = flower[1];
-      dt[s] += 1; dt[e + 1] -= 1;
-      xs.push_back(s); xs.push_back(e + 1);
-    }
-    compress(xs);
+    sort(flowers.begin(), flowers.end(), [](const vector<int>& a, const vector<int>& b) {
+      return a[0] < b[0];
+    });
+    set<int> people_s(people.begin(), people.end());
 
-    int n = people.size();
-    vector<int> ans(n, 0);
+    priority_queue<int, vector<int>, greater<int>> end_times;
+    map<int, int> fcnt;
 
-    vector<pair<int, int>> ps(n);
-    for (int i = 0; i < n; i++) ps[i] = {people[i], i};
-    sort(ps.begin(), ps.end());
-
-    int cnt = 0, p = 0;
-    for (int x : xs) {
-      while (p < n) {
-        auto [k, i] = ps[p];
-        if (k >= x) break;
-        ans[i] = cnt;
-        p++;
+    int Z = flowers.size(), i = 0;
+    for (auto p : people_s) {
+      while (i < Z && flowers[i][0] <= p) {
+        end_times.push(flowers[i][1]);
+        i++;
       }
-      cnt += dt[x];
+      while (!end_times.empty() && end_times.top() < p) {
+        end_times.pop();
+      }
+      fcnt[p] = end_times.size();
     }
+
+    vector<int> ans;
+    for (auto p : people) ans.push_back(fcnt[p]);
     return ans;
   }
 };
