@@ -1,19 +1,18 @@
-class Solution {
-  int d[1005];
+const int INF = 0x3f3f3f3f;
 
+class Solution {
 public:
   int paintWalls(vector<int>& cost, vector<int>& time) {
     int N = cost.size();
 
-    memset(d, 0x3f, sizeof(d)); d[N] = 0;
-    for (int i = 0; i < N; i++) {
-      int C = cost[i], T = time[i];
-      for (int pT = 0; pT <= N; pT++) {
-        int nT = max(0, pT - T - 1);
-        d[nT] = min(d[nT], d[pT] + C);
+    vector<int> d(N + 1, INF); d[0] = 0;
+    for (int i = 0; i < N; ++i) {
+      for (int nt = N; nt >= 0; --nt) {
+        int pt = max(0, nt - time[i] - 1);
+        d[nt] = min(d[nt], d[pt] + cost[i]);
       }
     }
 
-    return d[0];
+    return d[N];
   }
 };
