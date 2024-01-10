@@ -32,7 +32,9 @@
     "variant": "cpp",
     "complex": "cpp",
     "future": "cpp",
-    "compare": "cpp"
+    "compare": "cpp",
+    "tuple": "cpp",
+    "set": "cpp"
   },
   "rust-analyzer.linkedProjects": [
     "./search-in-rotated-sorted-array-ii/Cargo.toml"
