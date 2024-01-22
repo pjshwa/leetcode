@@ -1,45 +1,43 @@
-const int MOD = 1e9 + 7;
 using ll = long long;
 using pii = pair<int, int>;
+const int MOD = 1e9 + 7;
 
 class Solution {
 public:
   int sumSubarrayMins(vector<int>& arr) {
-    int n = arr.size();
+    int N = arr.size();
+    int parent[N], usz[N], vis[N];
 
-    vector<int> ml(n, -1), mr(n, -1);
-    stack<pii> s;
+    iota(parent, parent + N, 0);
+    fill(vis, vis + N, 0);
+    fill(usz, usz + N, 1);
 
-    for (int i = 0; i < n; i++) {
-      while (!s.empty() && s.top().first > arr[i]) {
-        mr[s.top().second] = i;
-        s.pop();
-      }
-      s.push({arr[i], i});
-    }
+    function<int(int)> Find = [&](int x) {
+      if (x != parent[x]) parent[x] = Find(parent[x]);
+      return parent[x];
+    };
+    function<void(int, int)> Union = [&](int x, int y) {
+      x = Find(x); y = Find(y);
+      if (x == y) return;
+      if (usz[x] < usz[y]) swap(x, y);
+      parent[y] = x; usz[x] += usz[y];
+    };
 
-    while (!s.empty()) s.pop();
-    for (int i = n - 1; i >= 0; i--) {
-      while (!s.empty() && s.top().first >= arr[i]) {
-        ml[s.top().second] = i;
-        s.pop();
-      }
-      s.push({arr[i], i});
-    }
-
-    priority_queue<pii, vector<pii>, greater<pii>> pq;
-    for (int i = 0; i < n; i++) pq.push({arr[i], i});
+    priority_queue<pii> pq;
+    for (int i = 0; i < N; ++i) pq.emplace(arr[i], i);
 
     ll ans = 0;
     while (!pq.empty()) {
-      auto [v, i] = pq.top(); pq.pop();
-      int l = ml[i] == -1 ? -1 : ml[i];
-      int r = mr[i] == -1 ? n : mr[i];
+      auto [x, i] = pq.top(); pq.pop();
+      vis[i] = 1;
 
-      ll addend = v;
-      addend *= (i - l) * (r - i);
-      addend %= MOD;
-      ans = (ans + addend) % MOD;
+      ll cur = 1;
+      for (int j : {i - 1, i + 1}) {
+        if (j < 0 || j >= N || !vis[j]) continue;
+        cur = (cur * (1 + usz[Find(j)])) % MOD;
+        Union(i, j);
+      }
+      ans = (ans + cur * x) % MOD;
     }
     return ans;
   }
