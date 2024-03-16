@@ -1,16 +1,13 @@
 class Solution {
 public:
   int findMaxLength(vector<int>& nums) {
-    map<int, int> t;
-    t[0] = -1;
-
-    int pf = 0, ans = 0, n = nums.size();
-    for (int i = 0; i < n; i++) {
-      nums[i] ? pf++ : pf--;
-      if (t.count(pf)) ans = max(ans, i - t[pf]);
-      else t[pf] = i;
+    int dt = 0, N = nums.size(), ans = 0;
+    map<int, int> mp; mp[0] = -1;
+    for (int i = 0; i < N; ++i) {
+      dt += (nums[i] == 0) ? -1 : 1;
+      if (mp.count(dt)) ans = max(ans, i - mp[dt]);
+      else mp[dt] = i;
     }
-
     return ans;
   }
 };
