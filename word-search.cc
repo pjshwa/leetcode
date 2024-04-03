@@ -1,29 +1,26 @@
-const int dx[4] = {1, 0, -1, 0}, dy[4] = {0, 1, 0, -1};
+const int dx[] = {0, 0, 1, -1};
+const int dy[] = {1, -1, 0, 0};
 
 class Solution {
 public:
   bool exist(vector<vector<char>>& board, string word) {
-    int n = board.size(), m = board[0].size();
-    auto dfs = [&](auto&& dfs, int i, int j, int c) -> bool {
-      if (c + 1 == word.size()) return true;
+    int N = board.size(), M = board[0].size();
+    vector<vector<bool>> vis(N, vector<bool>(M, false));
 
-      board[i][j] = '#';
+    function<bool(int, int, int)> dfs = [&](int x, int y, int idx) {
+      if (idx == word.size()) return true;
+      if (x < 0 || x >= N || y < 0 || y >= M || vis[x][y] || board[x][y] != word[idx]) return false;
+
+      vis[x][y] = true;
       for (int k = 0; k < 4; ++k) {
-        int ni = i + dx[k], nj = j + dy[k];
-        if (ni < 0 || ni >= n || nj < 0 || nj >= m) continue;
-
-        if (board[ni][nj] == word[c + 1] && dfs(dfs, ni, nj, c + 1)) return true;
+        if (dfs(x + dx[k], y + dy[k], idx + 1)) return true;
       }
-      board[i][j] = word[c];
+      vis[x][y] = false;
+
       return false;
     };
 
-    for (int i = 0; i < n; ++i) {
-      for (int j = 0; j < m; ++j) {
-        if (board[i][j] == word[0] && dfs(dfs, i, j, 0)) return true;
-      }
-    }
-
+    for (int i = 0; i < N; ++i) for (int j = 0; j < M; ++j) if (dfs(i, j, 0)) return true;
     return false;
   }
 };
