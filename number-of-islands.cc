@@ -1,33 +1,29 @@
-const int dx[4] = {-1, 0, 1, 0}, dy[4] = {0, 1, 0, -1};
+const int dx[] = {0, 0, 1, -1};
+const int dy[] = {1, -1, 0, 0};
 
 class Solution {
-  bool vis[300][300];
-  int n, m;
-  vector<vector<char>> grid;
-
-  void dfs(int i, int j) {
-    vis[i][j] = true;
-    for (int k = 0; k < 4; k++) {
-      int x = i + dx[k], y = j + dy[k];
-      if (x < 0 || x >= n || y < 0 || y >= m) continue;
-      if (grid[x][y] == '1' && !vis[x][y]) dfs(x, y);
-    }
-  }
-
 public:
   int numIslands(vector<vector<char>>& grid) {
-    n = grid.size(), m = grid[0].size();
-    this->grid = grid;
-    memset(vis, 0, sizeof(vis));
+    int N = grid.size(), M = grid[0].size();
+    vector<vector<bool>> vis(N, vector<bool>(M, false));
+
+    function<void(int, int)> dfs = [&](int x, int y) {
+      vis[x][y] = true;
+      for (int i = 0; i < 4; ++i) {
+        int nx = x + dx[i], ny = y + dy[i];
+        if (nx < 0 || nx >= N || ny < 0 || ny >= M) continue;
+        if (grid[nx][ny] == '0' || vis[nx][ny]) continue;
+        dfs(nx, ny);
+      }
+    };
 
     int ans = 0;
-    for (int i = 0; i < n; i++) for (int j = 0; j < m; j++) {
+    for (int i = 0; i < N; ++i) for (int j = 0; j < M; ++j) {
       if (grid[i][j] == '1' && !vis[i][j]) {
-        ans++;
         dfs(i, j);
+        ++ans;
       }
     }
-
     return ans;
   }
 };
