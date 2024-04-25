@@ -1,20 +1,15 @@
 class Solution {
 public:
   int longestIdealString(string s, int k) {
-    int p[26] = {0};
-    for (int i = 0; i < s.size(); ++i) {
-      int x = s[i] - 'a', u = p[x];
-      for (int j = x - k; j <= x + k; j++) {
-        if (j < 0 || j >= 26) continue;
-        u = max(u, p[j] + 1);
+    int N = s.size(), P[26]; memset(P, -1, sizeof P);
+    for (int i = 0; i < N; ++i) {
+      int c = s[i] - 'a', u = 1;
+      for (int p = c - k; p <= c + k; ++p) {
+        if (p < 0 || p >= 26 || P[p] == -1) continue;
+        u = max(u, P[p] + 1);
       }
-      p[x] = u;
+      P[c] = u;
     }
-
-    int ans = 0;
-    for (int i = 0; i < 26; ++i) {
-      ans = max(ans, p[i]);
-    }
-    return ans;
+    return *max_element(P, P + 26);
   }
 };
