@@ -1,49 +1,38 @@
 const int MAX = 3e4;
 
 class Solution {
-  vector<int> graph[MAX];
-  vector<int> ans;
-  int ssz[MAX], usz[MAX];
+  vector<int> graph[MAX], ans;
+  int usz[MAX];
 
-  void dfs1(int v, int p) {
-    ssz[v] = 1;
+  int dfs1(int v, int p) {
+    usz[v] = 1; int ret = 0;
     for (int u : graph[v]) {
       if (u == p) continue;
-      dfs1(u, v);
-      ssz[v] += ssz[u];
+      ret += dfs1(u, v);
+      ret += usz[u];
+      usz[v] += usz[u];
     }
+    return ret;
   }
 
-  void dfs2(int v, int p) {
-    usz[v] = 0;
+  void dfs2(int v, int p, int acc) {
+    ans[v] = acc;
     for (int u : graph[v]) {
       if (u == p) continue;
-      dfs2(u, v);
-      usz[v] += usz[u] + ssz[u];
-    }
-  }
-
-  void dfs3(int v, int p, int o) {
-    ans[v] = o;
-    for (int u : graph[v]) {
-      if (u == p) continue;
-      dfs3(u, v, o - ssz[u] + (ssz[0] - ssz[u]));
+      dfs2(u, v, acc + usz[0] - 2 * usz[u]);
     }
   }
 
 public:
   vector<int> sumOfDistancesInTree(int n, vector<vector<int>>& edges) {
     ans.resize(n);
-    for (auto& ev : edges) {
-      int u = ev[0], v = ev[1];
-      graph[u].push_back(v);
-      graph[v].push_back(u);
+    for (auto& e : edges) {
+      int u = e[0], v = e[1];
+      graph[u].push_back(v); graph[v].push_back(u);
     }
-
-    dfs1(0, -1);
-    dfs2(0, -1);
-    dfs3(0, -1, usz[0]);
-
+    
+    int acc = dfs1(0, -1);
+    dfs2(0, -1, acc);
     return ans;
   }
 };
