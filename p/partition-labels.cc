@@ -1,24 +1,23 @@
 class Solution {
-  int m[26];
 public:
   vector<int> partitionLabels(string s) {
-    int n = s.size();
-    memset(m, -1, sizeof(m));
-    for (int i = 0; i < n; i++) m[s[i] - 'a'] = max(m[s[i] - 'a'], i);
+    int N = s.size(), C[26]{}, l = 0, b = 0;
+    for (char c : s) ++C[c - 'a'];
 
-    int li = 0;
-    set<int> cur;
     vector<int> ans;
-    for (int i = 0; i < n; i++) {
-      cur.insert(s[i] - 'a');
-      if (m[s[i] - 'a'] == i) cur.erase(s[i] - 'a');
-
-      if (cur.size() == 0) {
-        ans.push_back(i - li + 1);
-        li = i + 1;
+    for (int i = 0; i < N; ++i) {
+      int c = s[i] - 'a', ok = 1;
+      b |= 1 << c; --C[c];
+      for (int j = 0; j < 26; ++j) {
+        if (!(b & (1 << j))) continue;
+        ok &= C[j] == 0;
+      }
+      if (ok) {
+        ans.push_back(i - l + 1);
+        l = i + 1;
       }
     }
-
     return ans;
   }
 };
+  
