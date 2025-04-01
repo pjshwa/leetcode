@@ -2,16 +2,15 @@ class Solution {
 public:
   long long mostPoints(vector<vector<int>>& questions) {
     int N = questions.size();
+    vector<long long> d(N);
+    d[N - 1] = questions[N - 1][0];
+    for (int i = N - 2; i >= 0; --i) {
+      d[i] = d[i + 1];
+      int score = questions[i][0], skip = questions[i][1];
 
-    long long d[N]; memset(d, -1, sizeof(d));
-    function<long long(int)> r = [&](int i) {
-      if (i >= N) return 0LL;
-      if (d[i] != -1) return d[i];
-
-      long long ret = r(i + 1), score = questions[i][0], skip = questions[i][1];
-      ret = max(ret, r(i + skip + 1) + score);
-      return d[i] = ret;
-    };
-    return r(0);
+      long long nxt = i + skip + 1 < N ? d[i + skip + 1] : 0;
+      d[i] = max(d[i], nxt + score);
+    }
+    return d[0];
   }
 };
