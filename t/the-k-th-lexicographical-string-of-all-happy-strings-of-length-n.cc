@@ -1,25 +1,24 @@
 class Solution {
-  string cur, ans;
-  int cnt = 0, n, k;
-
-  void dfs(int i) {
-    if (i == n) {
-      if (++cnt == k) ans = cur;
-      return;
-    }
-    for (char c = 'a'; c <= 'c'; ++c) {
-      if (i == 0 || c != cur[i - 1]) {
-        cur.push_back(c);
-        dfs(i + 1);
-        cur.pop_back();
-      }
-    }
-  }
-
 public:
   string getHappyString(int n, int k) {
-    this->n = n; this->k = k;
-    dfs(0);
+    int total = 3;
+    for (int i = 1; i < n; ++i) total *= 2;
+    if (--k >= total) return "";
+
+    total /= 3;
+    string ans = string(1, (k / total) + 'a');
+    k %= total;
+
+    string t = "abc";
+    for (int i = 1; i < n; ++i) {
+      string u = "";
+      for (char c : t) {
+        if (c != ans.back()) u.push_back(c);
+      }
+      total /= 2;
+      ans += u[k / total];
+      k %= total;
+    }
     return ans;
   }
 };
