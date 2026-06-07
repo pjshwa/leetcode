@@ -1,40 +1,31 @@
-/**
- * Definition for a binary tree node.
- * struct TreeNode {
- *     int val;
- *     TreeNode *left;
- *     TreeNode *right;
- *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
- *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
- *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
- * };
- */
+#include <bits/stdc++.h>
+using namespace std;
 
-const int MAXN = 1e5;
+struct TreeNode {
+  int val;
+  TreeNode *left;
+  TreeNode *right;
+  TreeNode() : val(0), left(nullptr), right(nullptr) {}
+  TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+  TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+};
+
+const int MAXN = 100001;
 
 class Solution {
-  vector<pair<int, int>> adj[MAXN + 1];
-  int indegree[MAXN + 1];
-
-  TreeNode* dfs(int v) {
-    TreeNode* node = new TreeNode(v);
-    for (auto& [u, l] : adj[v]) {
-      if (l) node->left = dfs(u);
-      else node->right = dfs(u);
-    }
-    return node;
-  }
-
 public:
   TreeNode* createBinaryTree(vector<vector<int>>& descriptions) {
-    memset(indegree, 0, sizeof(indegree));
+    map<int, TreeNode*> nodes; int indegree[MAXN + 1] = {0};
     for (auto& d : descriptions) {
-      adj[d[0]].emplace_back(d[1], d[2]);
-      ++indegree[d[1]];
+      int parent = d[0], child = d[1], isLeft = d[2];
+      if (!nodes.count(parent)) nodes[parent] = new TreeNode(parent);
+      if (!nodes.count(child)) nodes[child] = new TreeNode(child);
+      if (isLeft) nodes[parent]->left = nodes[child];
+      else nodes[parent]->right = nodes[child];
+      ++indegree[child];
     }
-
-    for (int i = 1; i <= MAXN; ++i) {
-      if (indegree[i] == 0 && !adj[i].empty()) return dfs(i);
+    for (auto& [val, node] : nodes) {
+      if (!indegree[val]) return node;
     }
     return nullptr;
   }
