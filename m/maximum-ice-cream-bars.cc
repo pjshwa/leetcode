@@ -1,14 +1,17 @@
+const int MAXN = 1e5;
+
 class Solution {
 public:
   int maxIceCream(vector<int>& costs, int coins) {
-    priority_queue<int, vector<int>, greater<int>> pq;
-    for (int cost : costs) pq.push(cost);
+    vector<int> C(MAXN + 1);
+    for (auto& c : costs) ++C[c];
 
-    while (!pq.empty() && coins >= pq.top()) {
-      coins -= pq.top();
-      pq.pop();
+    int ans = 0;
+    for (int p = 1; p <= MAXN; ++p) {
+      int cnt = min(coins / p, C[p]);
+      ans += cnt;
+      coins -= p * cnt;
     }
-
-    return costs.size() - pq.size();
+    return ans;
   }
 };
