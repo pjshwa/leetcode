@@ -2,16 +2,15 @@ class Solution {
 public:
   vector<int> sequentialDigits(int low, int high) {
     vector<int> ans;
-    for (int s = 1; s <= 8; s++) {
-      long long x = s;
-      int next = s + 1;
-      while (next <= 10 && x <= high) {
-        if (x >= low) ans.push_back(x);
-        x = x * 10 + next;
-        next++;
+    for (int d = 1; d <= 9; ++d) {
+      int num = 0;
+      for (int j = d; j <= 9; ++j) {
+        num = num * 10 + j;
+        if (num > high) break;
+        if (num >= low) ans.push_back(num);
       }
     }
     sort(ans.begin(), ans.end());
-    return ans;      
+    return ans;
   }
 };
