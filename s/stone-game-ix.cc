@@ -3,7 +3,6 @@ public:
   bool stoneGameIX(vector<int>& stones) {
     int N = stones.size(), OC[3]{};
     for (int e : stones) ++OC[e % 3];
-    if (OC[0] == N) return false;
 
     int o = OC[0], l, C[3], t;
     C[1] = OC[1], C[2] = OC[2];
