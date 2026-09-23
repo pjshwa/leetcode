@@ -1,20 +1,19 @@
-const int INF = 1e9 + 7;
-
 class Solution {
 public:
   int minOperations(vector<int>& nums, int x) {
-    int n = nums.size();
-
-    int ans = INF, ep = 0, lsum = 0, rsum = accumulate(nums.begin(), nums.end(), 0);
-    for (int sp = 0; sp < n; sp++) {
-      while (ep < sp) rsum -= nums[ep++];
-      while (ep < n && lsum + rsum > x) rsum -= nums[ep++];
-      if (lsum + rsum == x) ans = min(ans, n + sp - ep);
-
-      lsum += nums[sp];
+    int N = nums.size(), acc = 0;
+    map<int, int> P; P[0] = -1;
+    for (int i = 0; i < N; ++i) {
+      acc += nums[i];
+      P[acc] = i;
     }
-
-    if (ans == INF) return -1;
-    return ans;
+    int ans = INT_MAX; acc = 0;
+    for (int i = N - 1; i >= 0; --i) {
+      if (P.find(x - acc) != P.end()) {
+        ans = min(ans, N - i + P[x - acc]);
+      }
+      acc += nums[i];
+    }
+    return ans > N ? -1 : ans;
   }
 };
