@@ -1,12 +1,11 @@
 class Solution {
 public:
   int minAddToMakeValid(string s) {
-    int dt = 0, ans = 0;
+    int mmin = INT_MAX, cur = 0;
     for (char c : s) {
-      if (c == '(') ++dt;
-      else if (dt > 0) --dt;
-      else ++ans;
+      c == '(' ? ++cur : --cur;
+      mmin = min(mmin, cur);
     }
-    return ans + dt;
+    return cur - 2 * min(0, mmin);
   }
 };
